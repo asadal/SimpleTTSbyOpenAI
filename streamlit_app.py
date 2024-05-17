@@ -38,9 +38,11 @@ def make_file(filehead, voice, text):
     return audio_filename, set_temp_dir
 
 def app():
-    if "audio_file" not in st.session_state or "filename" not in st.session_state or "article_text" not in st.session_state:
+    if "audio_file" not in st.session_state:
         st.session_state.audio_file = None
+    if "filename" not in st.session_state:
         st.session_state.filename = None
+    if "article_text" not in st.session_state:
         st.session_state.article_text = ''
 
     st.set_page_config(
@@ -51,7 +53,6 @@ def app():
     col1, col2 = st.columns([8, 2])
     with col1:
         st.title("simple text-to-speech")
-        st.subheader("by OpenAI")
     with col2:
         if st.button("clear ↺"):
             st.session_state.audio_file = None
