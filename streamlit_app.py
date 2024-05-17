@@ -51,6 +51,7 @@ def app():
     col1, col2 = st.columns([8, 2])
     with col1:
         st.title("simple text-to-speech")
+        st.subheader("by OpenAI")
     with col2:
         if st.button("clear ↺"):
             st.session_state.audio_file = None
