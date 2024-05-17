@@ -16,7 +16,7 @@ def make_file(filehead, voice, text):
     audio_filename = os.path.join(temp_dir, filehead + ".mp3")
     print("audio filename: ", audio_filename)
     
-    client = OpenAI()
+    client = OpenAI(api_key=OPENAI_API_KEY)
     response = client.audio.speech.create(
         model="tts-1",
         voice=voice,
