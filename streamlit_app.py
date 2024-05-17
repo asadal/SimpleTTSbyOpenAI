@@ -11,12 +11,12 @@ def create_temp_dir():
     os.chmod(temp_dir, 0o700)
     return temp_dir, set_temp_dir
 
-def make_file(filehead, voice, text):
+def make_file(filehead, voice, text, api_key):
     temp_dir, set_temp_dir = create_temp_dir()
     audio_filename = os.path.join(temp_dir, filehead + ".mp3")
     print("audio filename: ", audio_filename)
     
-    client = OpenAI(api_key=OPENAI_API_KEY)
+    client = OpenAI(api_key=api_key)
     response = client.audio.speech.create(
         model="tts-1",
         voice=voice,
@@ -61,7 +61,7 @@ def app():
             st.experimental_rerun()
 
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Speaker_Icon.svg/1024px-Speaker_Icon.svg.png", width=150)
-    OPENAI_API_KEY = st.text_input("OpenAI API-Key", placeholder="sk-...", type="password")
+    api_key = st.text_input("OpenAI API-Key", placeholder="sk-...", type="password")
     article_text = st.text_area('본문 넣기', height=200, value=st.session_state.article_text, placeholder='별이 빛나는 밤하늘을 보며 갈 수가 있고 또 가야만 하는 길의 지도를 읽을 수 있던 시대는 얼마나 행복했던가.')
     filehead = st.text_input('파일명', placeholder='lukacs')
     tts_button = st.button("mp3 만들기")
@@ -79,12 +79,12 @@ def app():
         "Shimmer": "shimmer"
     }
     voice = voices[voice_select]
-    if OPENAI_API_KEY is not None:
+    if api_key is not None:
         if tts_button or st.session_state.audio_file is not None:
             if tts_button:
                 with st.spinner("오디오 파일을 생성하고 있어요... 🧐"):
                     try:
-                        mp3_filepath, temp_dir_handle = make_file(filehead, voice, article_text)
+                        mp3_filepath, temp_dir_handle = make_file(filehead, voice, article_text, api_key)
                         print("mp3_filepath : ", mp3_filepath)
                         with open(mp3_filepath, 'rb') as f:
                             mp3_file = f.read()
