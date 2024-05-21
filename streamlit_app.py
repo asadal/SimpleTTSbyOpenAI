@@ -44,6 +44,8 @@ def app():
         st.session_state.filename = None
     if "article_text" not in st.session_state:
         st.session_state.article_text = ''
+    if "temp_dir_handle" not in st.session_state:
+        st.session_state.temp_dir_handle = None
 
     st.set_page_config(
         page_title="Simple Text-to-Speech",
@@ -59,6 +61,9 @@ def app():
             st.session_state.audio_file = None
             st.session_state.filename = None
             st.session_state.article_text = ''
+            if st.session_state.temp_dir_handle:
+                st.session_state.temp_dir_handle.cleanup()
+                st.session_state.temp_dir_handle = None
             st.experimental_rerun()
 
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Speaker_Icon.svg/1024px-Speaker_Icon.svg.png", width=150)
@@ -92,7 +97,9 @@ def app():
                         st.session_state.audio_file = mp3_file
                         st.session_state.filename = filehead + '.mp3'
                         st.session_state.article_text = article_text
-                        temp_dir_handle.cleanup()  # Ensure the temporary directory is cleaned up
+                        if st.session_state.temp_dir_handle:
+                            st.session_state.temp_dir_handle.cleanup()
+                        st.session_state.temp_dir_handle = temp_dir_handle
                     except Exception as e:
                         st.error("오류가 발생했습니다.")
                         st.error(e)
